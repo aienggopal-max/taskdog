@@ -74,15 +74,12 @@ from taskdog_core.domain.entities.task import Task, TaskStatus
 from taskdog_core.infrastructure.persistence.database.sqlite_task_repository import SqliteTaskRepository
 from taskdog_core.controllers.task_crud_controller import TaskCrudController
 from taskdog_core.infrastructure.config.config_manager import ConfigManager
-from taskdog_core.shared.utils.logger import StandardLogger
-
 # Setup
 repository = SqliteTaskRepository("sqlite:///tasks.db")
 config = ConfigManager()
-logger = StandardLogger("example")
 
 # Create controller
-crud_controller = TaskCrudController(repository, config, logger)
+crud_controller = TaskCrudController(repository, notes_repository, config)
 
 # Create a task
 from taskdog_core.application.dto.task_request import CreateTaskRequest
