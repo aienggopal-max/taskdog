@@ -43,6 +43,8 @@ from taskdog_server.api.models.responses import (
 )
 from taskdog_server.api.utils import parse_iso_date
 
+VALID_PERIODS = ("all", "7d", "30d")
+
 router = APIRouter()
 
 
@@ -50,7 +52,7 @@ router = APIRouter()
 async def get_statistics(
     controller: AnalyticsControllerDep,
     _client_name: AuthenticatedClientDep,
-    period: str = Query("all", description="Time period: all, 7d, or 30d"),
+    period: str = Query(VALID_PERIODS[0], description="Time period: all, 7d, or 30d"),
 ) -> StatisticsResponse:
     """Get task statistics for a time period.
 
@@ -64,7 +66,7 @@ async def get_statistics(
     Raises:
         HTTPException: 400 if period is invalid
     """
-    if period not in ["all", "7d", "30d"]:
+    if period not in VALID_PERIODS:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Period must be one of: all, 7d, 30d",
