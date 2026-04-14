@@ -17,7 +17,6 @@ from taskdog_server.api.dependencies import (
     CrudControllerDep,
     EventBroadcasterDep,
     HolidayCheckerDep,
-    NotesRepositoryDep,
     QueryControllerDep,
 )
 from taskdog_server.api.error_handlers import handle_task_errors
@@ -110,7 +109,6 @@ async def create_task(
 @router.get("", response_model=TaskListResponse)
 async def list_tasks(
     controller: QueryControllerDep,
-    notes_repo: NotesRepositoryDep,
     holiday_checker: HolidayCheckerDep,
     _client_name: AuthenticatedClientDep,
     include_archived: Annotated[
@@ -180,7 +178,7 @@ async def list_tasks(
         gantt_end_date=gantt_end,
         holiday_checker=holiday_checker if include_gantt else None,
     )
-    return convert_to_task_list_response(result, notes_repo)
+    return convert_to_task_list_response(result)
 
 
 @router.get("/{task_id}", response_model=TaskDetailResponse)

@@ -1,7 +1,6 @@
 """Tests for DTO to Pydantic response model converters."""
 
 from datetime import date, datetime
-from unittest.mock import Mock
 
 import pytest
 
@@ -102,11 +101,9 @@ class TestConvertToTaskListResponse:
         """Test converting empty task list."""
         # Arrange
         dto = TaskListOutput(tasks=[], total_count=0, filtered_count=0, gantt_data=None)
-        notes_repo = Mock()
-        notes_repo.get_task_ids_with_notes = Mock(return_value=set())
 
         # Act
-        response = convert_to_task_list_response(dto, notes_repo)
+        response = convert_to_task_list_response(dto)
 
         # Assert
         assert response.tasks == []
@@ -127,13 +124,15 @@ class TestConvertToTaskListResponse:
             updated_at=now,
         )
         dto = TaskListOutput(
-            tasks=[task], total_count=10, filtered_count=1, gantt_data=None
+            tasks=[task],
+            total_count=10,
+            filtered_count=1,
+            gantt_data=None,
+            task_ids_with_notes=set(),
         )
-        notes_repo = Mock()
-        notes_repo.get_task_ids_with_notes = Mock(return_value=set())
 
         # Act
-        response = convert_to_task_list_response(dto, notes_repo)
+        response = convert_to_task_list_response(dto)
 
         # Assert
         assert len(response.tasks) == 1
@@ -143,7 +142,6 @@ class TestConvertToTaskListResponse:
         assert response.total_count == 10
         assert response.filtered_count == 1
         assert response.gantt is None
-        notes_repo.get_task_ids_with_notes.assert_called_once_with([1])
 
     def test_convert_task_list_with_notes(self):
         """Test converting task list with notes."""
@@ -158,13 +156,15 @@ class TestConvertToTaskListResponse:
             updated_at=now,
         )
         dto = TaskListOutput(
-            tasks=[task], total_count=1, filtered_count=1, gantt_data=None
+            tasks=[task],
+            total_count=1,
+            filtered_count=1,
+            gantt_data=None,
+            task_ids_with_notes={1},
         )
-        notes_repo = Mock()
-        notes_repo.get_task_ids_with_notes = Mock(return_value={1})
 
         # Act
-        response = convert_to_task_list_response(dto, notes_repo)
+        response = convert_to_task_list_response(dto)
 
         # Assert
         assert response.tasks[0].has_notes is True
@@ -203,13 +203,15 @@ class TestConvertToTaskListResponse:
             holidays={date(2025, 1, 4)},
         )
         dto = TaskListOutput(
-            tasks=[task], total_count=1, filtered_count=1, gantt_data=gantt_output
+            tasks=[task],
+            total_count=1,
+            filtered_count=1,
+            gantt_data=gantt_output,
+            task_ids_with_notes=set(),
         )
-        notes_repo = Mock()
-        notes_repo.get_task_ids_with_notes = Mock(return_value=set())
 
         # Act
-        response = convert_to_task_list_response(dto, notes_repo)
+        response = convert_to_task_list_response(dto)
 
         # Assert
         assert response.gantt is not None
@@ -247,14 +249,15 @@ class TestConvertToTaskListResponse:
             updated_at=now,
         )
         dto = TaskListOutput(
-            tasks=[task1, task2], total_count=2, filtered_count=2, gantt_data=None
+            tasks=[task1, task2],
+            total_count=2,
+            filtered_count=2,
+            gantt_data=None,
+            task_ids_with_notes={1},
         )
-        notes_repo = Mock()
-        # Task 1 has notes, task 2 does not
-        notes_repo.get_task_ids_with_notes = Mock(return_value={1})
 
         # Act
-        response = convert_to_task_list_response(dto, notes_repo)
+        response = convert_to_task_list_response(dto)
 
         # Assert
         assert len(response.tasks) == 2

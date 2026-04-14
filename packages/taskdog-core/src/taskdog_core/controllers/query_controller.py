@@ -88,6 +88,13 @@ class QueryController:
         )
         result = use_case.execute(input_dto)
 
+        # Populate note existence info if notes_repository is available
+        if self.notes_repository is not None and result.tasks:
+            task_ids = [task.id for task in result.tasks]
+            result.task_ids_with_notes = self.notes_repository.get_task_ids_with_notes(
+                task_ids
+            )
+
         # Optionally include Gantt chart data
         if include_gantt:
             gantt_input = GetGanttDataInput(

@@ -31,3 +31,4 @@ class TaskListOutput:
     total_count: int
     filtered_count: int
     gantt_data: "GanttOutput | None" = None
+    task_ids_with_notes: set[int] | None = None

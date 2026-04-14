@@ -8,7 +8,6 @@ from taskdog_core.application.dto.gantt_output import GanttOutput
 from taskdog_core.application.dto.task_detail_output import TaskDetailOutput
 from taskdog_core.application.dto.task_list_output import TaskListOutput
 from taskdog_core.application.dto.update_task_output import TaskUpdateOutput
-from taskdog_core.domain.repositories.notes_repository import NotesRepository
 from taskdog_core.shared.utils.datetime_parser import format_date_dict
 from taskdog_server.api.models.responses import (
     GanttDateRange,
@@ -79,21 +78,16 @@ def convert_to_gantt_response(gantt_output: GanttOutput) -> GanttResponse:
     )
 
 
-def convert_to_task_list_response(
-    dto: TaskListOutput, notes_repo: NotesRepository
-) -> TaskListResponse:
+def convert_to_task_list_response(dto: TaskListOutput) -> TaskListResponse:
     """Convert TaskListOutput DTO to Pydantic response model.
 
     Args:
         dto: TaskListOutput DTO from controller
-        notes_repo: Notes repository for checking note existence
 
     Returns:
         TaskListResponse with has_notes field populated
     """
-    # Batch query for note existence - single query instead of N queries
-    task_ids = [task.id for task in dto.tasks]
-    task_ids_with_notes = notes_repo.get_task_ids_with_notes(task_ids)
+    task_ids_with_notes = dto.task_ids_with_notes or set()
 
     tasks = [
         TaskResponse(
