@@ -42,7 +42,7 @@ jobs:
           path: site/
 
   deploy:
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: github.repository == 'Kohei-Wada/taskdog' && github.ref == 'refs/heads/main' && github.event_name == 'push'
     needs: build
     runs-on: ubuntu-latest
     # Pages allows one deployment at a time; queue instead of failing with 400.

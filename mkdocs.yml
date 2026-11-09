@@ -58,7 +58,6 @@ nav:
   - Optimization:
       - Architecture: optimization/architecture.md
   - Design Philosophy: design-philosophy.md
-  - Contributing: contributing.md
 
 exclude_docs: |
   requirements.txt

@@ -4,14 +4,14 @@ Get started with Taskdog in 5 minutes!
 
 ## Prerequisites
 
-- Python 3.11+ (workspace root) or 3.13+ (individual packages)
+- Python 3.12 or later
 - [uv](https://github.com/astral-sh/uv) package manager
 
 ## Step 1: Install Taskdog (2 minutes)
 
 ```bash
 # Clone the repository
-git clone https://github.com/Kohei-Wada/taskdog.git
+git clone https://github.com/aienggopal-max/taskdog.git
 cd taskdog
 
 # Install both CLI/TUI and API server
@@ -25,7 +25,7 @@ This installs two commands:
 
 ## Step 2: Configure Authentication (2 minutes)
 
-Taskdog uses API key authentication by default. You need to configure both server and client.
+To use API key authentication, configure both the server and the client.
 
 ### 2a. Generate API Key
 
